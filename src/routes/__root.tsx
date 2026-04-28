@@ -71,8 +71,16 @@ function RootComponent() {
         <Outlet />
       </main>
       <footer className="border-t border-border py-6 mt-12">
-        <div className="container mx-auto px-4 text-center text-xs font-mono text-muted-foreground">
-          <span className="text-primary">$</span> echo "© {new Date().getFullYear()} Afraim Farag"
+        <div className="container mx-auto px-4 flex items-center justify-center gap-3 text-xs font-mono text-muted-foreground">
+          <span><span className="text-primary">$</span> echo "© {new Date().getFullYear()} Afraim Farag"</span>
+          <Link
+            to="/admin/login"
+            aria-label="Admin login"
+            title="Admin"
+            className="opacity-40 hover:opacity-100 hover:text-primary transition-opacity"
+          >
+            <Lock className="h-3 w-3" />
+          </Link>
         </div>
       </footer>
       <Toaster />
