@@ -1,4 +1,5 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
+import { Lock } from "lucide-react";
 import { Toaster } from "@/components/ui/sonner";
 import { Header } from "@/components/Header";
 
