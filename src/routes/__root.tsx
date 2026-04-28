@@ -36,6 +36,13 @@ export const Route = createRootRoute({
       { name: "description", content: "Portfolio of Afraim Farag — developer projects, skills, and certifications." },
       { name: "author", content: "Afraim Farag" },
       { property: "og:type", content: "website" },
+      { property: "og:title", content: "Afraim Farag — Developer Portfolio" },
+      { name: "twitter:title", content: "Afraim Farag — Developer Portfolio" },
+      { property: "og:description", content: "Portfolio of Afraim Farag — developer projects, skills, and certifications." },
+      { name: "twitter:description", content: "Portfolio of Afraim Farag — developer projects, skills, and certifications." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/3ed44a48-e97b-4946-9892-856597bc1446/id-preview-0875bd7b--eb44fc77-2e03-4bb0-a411-5f45f5c394b9.lovable.app-1777336279358.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/3ed44a48-e97b-4946-9892-856597bc1446/id-preview-0875bd7b--eb44fc77-2e03-4bb0-a411-5f45f5c394b9.lovable.app-1777336279358.png" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
