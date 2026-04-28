@@ -197,6 +197,12 @@ function ProfileEditor({ open, onOpenChange, profile }: { open: boolean; onOpenC
 
   async function handleSave() {
     setSaving(true);
+    const { data: sess } = await supabase.auth.getSession();
+    if (!sess.session) {
+      setSaving(false);
+      toast.error("You must be signed in as admin to edit the profile.");
+      return;
+    }
     const { error } = await supabase.from("profile").update({
       name: name.trim(),
       bio: bio.trim(),
@@ -204,7 +210,7 @@ function ProfileEditor({ open, onOpenChange, profile }: { open: boolean; onOpenC
       updated_at: new Date().toISOString(),
     }).eq("id", profile.id);
     setSaving(false);
-    if (error) toast.error(error.message);
+    if (error) toast.error(`Database error: ${error.message}`);
     else { toast.success("Profile updated"); onOpenChange(false); }
   }
 
