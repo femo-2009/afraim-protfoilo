@@ -29,14 +29,16 @@ function SkillsPage() {
   function openEdit(i: Item) { setEditing(i); setEditorOpen(true); }
 
   return (
-    <div className="container mx-auto px-4 py-12">
-      <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
+    <div className="container mx-auto px-6 py-16">
+      <div className="flex items-center justify-between mb-12 flex-wrap gap-4">
         <div>
-          <p className="font-mono text-primary text-sm">$ ls ./skills</p>
-          <h1 className="text-4xl font-bold font-mono mt-1">Skills</h1>
+          <p className="font-mono text-primary text-xs tracking-[0.3em] uppercase mb-3">// expertise</p>
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
+            MY <span className="text-primary">SKILLS</span>
+          </h1>
         </div>
         {isAdmin && (
-          <Button onClick={openNew} className="font-mono"><Plus className="h-4 w-4 mr-2" /> Add skill</Button>
+          <Button onClick={openNew} className="font-mono uppercase tracking-wider rounded-full"><Plus className="h-4 w-4 mr-2" /> Add skill</Button>
         )}
       </div>
       <CardGrid items={data} table="skills" isAdmin={isAdmin} onEdit={openEdit} />

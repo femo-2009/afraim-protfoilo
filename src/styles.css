@@ -34,56 +34,56 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  /* Modern dev portfolio - dark navy + purple/blue */
-  --background: oklch(0.18 0.04 265);
-  --foreground: oklch(0.96 0.01 250);
-  --card: oklch(0.22 0.05 265);
-  --card-foreground: oklch(0.96 0.01 250);
-  --popover: oklch(0.22 0.05 265);
-  --popover-foreground: oklch(0.96 0.01 250);
-  --primary: oklch(0.7 0.2 280);
-  --primary-foreground: oklch(0.15 0.04 265);
-  --primary-glow: oklch(0.78 0.18 250);
-  --secondary: oklch(0.28 0.05 265);
-  --secondary-foreground: oklch(0.96 0.01 250);
-  --muted: oklch(0.26 0.04 265);
-  --muted-foreground: oklch(0.7 0.03 260);
-  --accent: oklch(0.65 0.22 250);
-  --accent-foreground: oklch(0.15 0.04 265);
-  --destructive: oklch(0.65 0.24 25);
-  --destructive-foreground: oklch(0.98 0.01 250);
-  --border: oklch(0.32 0.05 265);
-  --input: oklch(0.28 0.05 265);
-  --ring: oklch(0.7 0.2 280);
+  --radius: 0.5rem;
+  /* Modern dev portfolio - pure black + vivid orange */
+  --background: oklch(0.13 0.005 60);
+  --foreground: oklch(0.96 0.01 80);
+  --card: oklch(0.16 0.008 60);
+  --card-foreground: oklch(0.96 0.01 80);
+  --popover: oklch(0.15 0.008 60);
+  --popover-foreground: oklch(0.96 0.01 80);
+  --primary: oklch(0.72 0.2 50);
+  --primary-foreground: oklch(0.13 0.005 60);
+  --primary-glow: oklch(0.78 0.19 55);
+  --secondary: oklch(0.2 0.01 60);
+  --secondary-foreground: oklch(0.96 0.01 80);
+  --muted: oklch(0.2 0.01 60);
+  --muted-foreground: oklch(0.65 0.02 70);
+  --accent: oklch(0.72 0.2 50);
+  --accent-foreground: oklch(0.13 0.005 60);
+  --destructive: oklch(0.6 0.24 25);
+  --destructive-foreground: oklch(0.98 0.01 80);
+  --border: oklch(0.24 0.01 60);
+  --input: oklch(0.2 0.01 60);
+  --ring: oklch(0.72 0.2 50);
 
   --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-glow));
-  --gradient-bg: radial-gradient(ellipse at top, oklch(0.25 0.08 275 / 0.4), transparent 60%),
-                 radial-gradient(ellipse at bottom right, oklch(0.3 0.1 250 / 0.3), transparent 60%);
-  --shadow-glow: 0 0 40px oklch(0.7 0.2 280 / 0.3);
-  --shadow-card: 0 10px 40px -10px oklch(0.1 0.05 265 / 0.6);
+  --gradient-bg: radial-gradient(ellipse at top left, oklch(0.72 0.2 50 / 0.08), transparent 50%),
+                 radial-gradient(ellipse at bottom right, oklch(0.72 0.2 50 / 0.05), transparent 60%);
+  --shadow-glow: 0 0 60px oklch(0.72 0.2 50 / 0.25);
+  --shadow-card: 0 10px 40px -10px oklch(0 0 0 / 0.6);
 }
 
 .dark {
-  --background: oklch(0.18 0.04 265);
-  --foreground: oklch(0.96 0.01 250);
-  --card: oklch(0.22 0.05 265);
-  --card-foreground: oklch(0.96 0.01 250);
-  --popover: oklch(0.22 0.05 265);
-  --popover-foreground: oklch(0.96 0.01 250);
-  --primary: oklch(0.7 0.2 280);
-  --primary-foreground: oklch(0.15 0.04 265);
-  --secondary: oklch(0.28 0.05 265);
-  --secondary-foreground: oklch(0.96 0.01 250);
-  --muted: oklch(0.26 0.04 265);
-  --muted-foreground: oklch(0.7 0.03 260);
-  --accent: oklch(0.65 0.22 250);
-  --accent-foreground: oklch(0.15 0.04 265);
-  --destructive: oklch(0.65 0.24 25);
-  --destructive-foreground: oklch(0.98 0.01 250);
-  --border: oklch(0.32 0.05 265);
-  --input: oklch(0.28 0.05 265);
-  --ring: oklch(0.7 0.2 280);
+  --background: oklch(0.13 0.005 60);
+  --foreground: oklch(0.96 0.01 80);
+  --card: oklch(0.16 0.008 60);
+  --card-foreground: oklch(0.96 0.01 80);
+  --popover: oklch(0.15 0.008 60);
+  --popover-foreground: oklch(0.96 0.01 80);
+  --primary: oklch(0.72 0.2 50);
+  --primary-foreground: oklch(0.13 0.005 60);
+  --secondary: oklch(0.2 0.01 60);
+  --secondary-foreground: oklch(0.96 0.01 80);
+  --muted: oklch(0.2 0.01 60);
+  --muted-foreground: oklch(0.65 0.02 70);
+  --accent: oklch(0.72 0.2 50);
+  --accent-foreground: oklch(0.13 0.005 60);
+  --destructive: oklch(0.6 0.24 25);
+  --destructive-foreground: oklch(0.98 0.01 80);
+  --border: oklch(0.24 0.01 60);
+  --input: oklch(0.2 0.01 60);
+  --ring: oklch(0.72 0.2 50);
 }
 
 @layer base {
@@ -103,7 +103,11 @@
     font-family: var(--font-sans);
   }
 
-  h1, h2, h3, h4, .font-mono {
+  h1, h2, h3, h4 {
+    font-family: var(--font-sans);
+    letter-spacing: -0.02em;
+  }
+  .font-mono {
     font-family: var(--font-mono);
   }
 }

@@ -46,56 +46,95 @@ function HomePage() {
   }, []);
 
   return (
-    <div className="container mx-auto px-4 py-12 space-y-20">
+    <div>
       {/* Hero */}
-      <section className="grid md:grid-cols-[300px_1fr] gap-10 items-center">
-        <div className="relative mx-auto">
-          <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary to-accent blur-2xl opacity-50" />
-          <div className="relative w-64 h-64 rounded-full overflow-hidden border-2 border-primary glow-border bg-muted">
-            {profile?.photo_url ? (
-              <img src={profile.photo_url} alt={profile.name} className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center font-mono text-muted-foreground">no photo</div>
+      <section className="container mx-auto px-6 py-20 md:py-32">
+        <div className="grid md:grid-cols-[1fr_320px] gap-12 items-center">
+          <div>
+            <div className="flex items-center gap-3 mb-6">
+              <span className="h-px w-10 bg-primary" />
+              <p className="font-mono text-primary text-xs tracking-[0.3em] uppercase">
+                Full Stack Developer
+              </p>
+            </div>
+            <h1 className="text-5xl md:text-7xl font-bold leading-[1.05] tracking-tight">
+              Building Digital
+              <br />
+              <span className="text-primary">Solutions</span> With
+              <br />
+              Modern Tech
+            </h1>
+            <p className="mt-8 text-base md:text-lg text-muted-foreground max-w-xl leading-relaxed whitespace-pre-wrap">
+              Hi, I'm <span className="text-foreground font-semibold">{profile?.name ?? "Afraim Farag"}</span>
+              {profile?.bio ? <> — {profile.bio}</> : " — a passionate developer crafting performant, scalable web apps and intuitive user experiences."}
+            </p>
+            <div className="mt-10 flex flex-wrap gap-4">
+              <a href="/projects">
+                <Button size="lg" className="font-mono uppercase tracking-wider rounded-full px-8">
+                  View Projects
+                </Button>
+              </a>
+              <a href="/skills">
+                <Button size="lg" variant="outline" className="font-mono uppercase tracking-wider rounded-full px-8">
+                  My Skills
+                </Button>
+              </a>
+            </div>
+            {isAdmin && (
+              <Button variant="ghost" size="sm" className="mt-6 font-mono text-muted-foreground" onClick={() => setEditing(true)}>
+                <Pencil className="h-4 w-4 mr-2" /> Edit profile
+              </Button>
             )}
           </div>
-        </div>
-        <div>
-          <p className="font-mono text-primary text-sm mb-2">$ whoami</p>
-          <h1 className="text-4xl md:text-6xl font-bold font-mono">
-            <span className="text-gradient">{profile?.name ?? "Afraim Farag"}</span>
-            <span className="cursor-blink" />
-          </h1>
-          <p className="mt-6 text-lg text-foreground/90 leading-relaxed whitespace-pre-wrap">
-            {profile?.bio || "..."}
-          </p>
-          {isAdmin && (
-            <Button variant="outline" size="sm" className="mt-6 font-mono" onClick={() => setEditing(true)}>
-              <Pencil className="h-4 w-4 mr-2" /> Edit profile
-            </Button>
-          )}
+          <div className="relative mx-auto md:mx-0">
+            <div className="absolute -inset-4 rounded-full bg-gradient-to-br from-primary/40 to-transparent blur-3xl opacity-60" />
+            <div className="relative w-64 h-64 md:w-72 md:h-72 rounded-full overflow-hidden border-2 border-primary/40 bg-muted">
+              {profile?.photo_url ? (
+                <img src={profile.photo_url} alt={profile.name} className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center font-mono text-muted-foreground text-sm">
+                  no photo
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </section>
+
+      <div className="border-t border-border" />
 
       {/* Skills marquee */}
-      <section>
-        <h2 className="font-mono text-2xl mb-6">
-          <span className="text-primary">&gt;</span> skills<span className="text-muted-foreground">.map(s =&gt; s)</span>
-        </h2>
-        <Marquee
-          items={skills.data}
-          empty="// add skills from the Skills page"
-        />
+      <section className="container mx-auto px-6 py-20">
+        <div className="flex items-end justify-between mb-10 flex-wrap gap-4">
+          <div>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+              MY <span className="text-primary">SKILLS</span>
+            </h2>
+            <p className="text-sm text-muted-foreground mt-2 font-mono">// click any skill to see it up close</p>
+          </div>
+          <a href="/skills" className="font-mono text-sm text-primary hover:underline">
+            View All →
+          </a>
+        </div>
+        <Marquee items={skills.data} empty="// add skills from the Skills page" />
       </section>
 
+      <div className="border-t border-border" />
+
       {/* Certificates marquee */}
-      <section>
-        <h2 className="font-mono text-2xl mb-6">
-          <span className="text-primary">&gt;</span> certificates<span className="text-muted-foreground">.list()</span>
-        </h2>
-        <Marquee
-          items={certs.data}
-          empty="// add certificates from the Certificates page"
-        />
+      <section className="container mx-auto px-6 py-20">
+        <div className="flex items-end justify-between mb-10 flex-wrap gap-4">
+          <div>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+              MY <span className="text-primary">CERTIFICATES</span>
+            </h2>
+            <p className="text-sm text-muted-foreground mt-2 font-mono">// click any certificate to see it up close</p>
+          </div>
+          <a href="/certificates" className="font-mono text-sm text-primary hover:underline">
+            View All →
+          </a>
+        </div>
+        <Marquee items={certs.data} empty="// add certificates from the Certificates page" />
       </section>
 
       {profile && <ProfileEditor open={editing} onOpenChange={setEditing} profile={profile} />}
@@ -158,6 +197,12 @@ function ProfileEditor({ open, onOpenChange, profile }: { open: boolean; onOpenC
 
   async function handleSave() {
     setSaving(true);
+    const { data: sess } = await supabase.auth.getSession();
+    if (!sess.session) {
+      setSaving(false);
+      toast.error("You must be signed in as admin to edit the profile.");
+      return;
+    }
     const { error } = await supabase.from("profile").update({
       name: name.trim(),
       bio: bio.trim(),
@@ -165,7 +210,7 @@ function ProfileEditor({ open, onOpenChange, profile }: { open: boolean; onOpenC
       updated_at: new Date().toISOString(),
     }).eq("id", profile.id);
     setSaving(false);
-    if (error) toast.error(error.message);
+    if (error) toast.error(`Database error: ${error.message}`);
     else { toast.success("Profile updated"); onOpenChange(false); }
   }
 

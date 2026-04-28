@@ -26,14 +26,16 @@ function ProjectsPage() {
   const [editing, setEditing] = useState<Item | null>(null);
 
   return (
-    <div className="container mx-auto px-4 py-12">
-      <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
+    <div className="container mx-auto px-6 py-16">
+      <div className="flex items-center justify-between mb-12 flex-wrap gap-4">
         <div>
-          <p className="font-mono text-primary text-sm">$ git log --oneline</p>
-          <h1 className="text-4xl font-bold font-mono mt-1">Projects</h1>
+          <p className="font-mono text-primary text-xs tracking-[0.3em] uppercase mb-3">// my work</p>
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
+            MY <span className="text-primary">PROJECTS</span>
+          </h1>
         </div>
         {isAdmin && (
-          <Button onClick={() => { setEditing(null); setEditorOpen(true); }} className="font-mono">
+          <Button onClick={() => { setEditing(null); setEditorOpen(true); }} className="font-mono uppercase tracking-wider rounded-full">
             <Plus className="h-4 w-4 mr-2" /> Add project
           </Button>
         )}
