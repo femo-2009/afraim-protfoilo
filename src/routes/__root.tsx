@@ -79,7 +79,7 @@ function RootComponent() {
       </main>
       <footer className="border-t border-border py-6 mt-12">
         <div className="container mx-auto px-4 flex items-center justify-center gap-3 text-xs font-mono text-muted-foreground">
-          <span><span className="text-primary">$</span> echo "Developed By Afraim Farag"</span>
+          <span><span className="text-primary">$</span> echo "Developed by Afraim Farag"</span>
           <Link
             to="/admin/login"
             aria-label="Admin login"
