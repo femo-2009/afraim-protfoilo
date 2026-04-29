@@ -2,6 +2,7 @@ import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/r
 import { Lock } from "lucide-react";
 import { Toaster } from "@/components/ui/sonner";
 import { Header } from "@/components/Header";
+import { AuthProvider } from "@/hooks/use-auth";
 
 import appCss from "../styles.css?url";
 
@@ -72,25 +73,27 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      <main className="flex-1">
-        <Outlet />
-      </main>
-      <footer className="border-t border-border py-6 mt-12">
-        <div className="container mx-auto px-4 flex items-center justify-center gap-3 text-xs font-mono text-muted-foreground">
-          <span>Developed by Afraim Farag</span>
-          <Link
-            to="/admin/login"
-            aria-label="Admin login"
-            title="Admin"
-            className="opacity-40 hover:opacity-100 hover:text-primary transition-opacity"
-          >
-            <Lock className="h-3 w-3" />
-          </Link>
-        </div>
-      </footer>
-      <Toaster />
-    </div>
+    <AuthProvider>
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-1">
+          <Outlet />
+        </main>
+        <footer className="border-t border-border py-6 mt-12">
+          <div className="container mx-auto px-4 flex items-center justify-center gap-3 text-xs font-mono text-muted-foreground">
+            <span>Developed by Afraim Farag</span>
+            <Link
+              to="/admin/login"
+              aria-label="Admin login"
+              title="Admin"
+              className="opacity-40 hover:opacity-100 hover:text-primary transition-opacity"
+            >
+              <Lock className="h-3 w-3" />
+            </Link>
+          </div>
+        </footer>
+        <Toaster />
+      </div>
+    </AuthProvider>
   );
 }
