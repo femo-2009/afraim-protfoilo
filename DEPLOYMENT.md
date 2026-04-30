@@ -1,123 +1,148 @@
-# Deployment Guide — Self-host on Vercel/Netlify with your own Supabase
+# Deployment Guide
 
-This project was built on Lovable. To run it on your own infrastructure you need:
-- A **Supabase** project (free tier is fine) — for database, auth, storage
-- A **Vercel** or **Netlify** account — for hosting the website
-- A **GitHub** repo (already connected via Lovable → GitHub)
+⚠️ **Important — read this first**
+
+This project is a **TanStack Start** app built for the **Cloudflare Workers** runtime
+(see `wrangler.jsonc` and `@cloudflare/vite-plugin` in `package.json`).
+
+That means:
+- There is **no `index.html`** in the build output. Do not look for one.
+- The build produces:
+  - `.output/server/` → the server entry (a Worker)
+  - `.output/public/` → static assets (JS/CSS/images)
+- Pages are rendered **server-side** by the Worker on every request.
+
+This is why a default static deploy on Vercel returns 404 — Vercel looks for
+`index.html` and there isn't one.
+
+## ✅ Recommended host: Cloudflare Pages (zero-config)
+
+This is the **only host** that runs the project as-is without any code changes.
+
+1. Go to https://dash.cloudflare.com → **Workers & Pages → Create → Pages → Connect to Git**.
+2. Select your GitHub repo.
+3. Build settings:
+   - **Build command**: `bun run build`
+   - **Build output directory**: `.output/public`
+4. Add environment variables (Settings → Environment variables → Production):
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_PUBLISHABLE_KEY`
+   - `VITE_SUPABASE_PROJECT_ID`
+   - `SUPABASE_URL`
+   - `SUPABASE_PUBLISHABLE_KEY`
+5. Click **Save and Deploy**.
+
+Cloudflare reads `wrangler.jsonc` automatically and runs the Worker entry. Done.
 
 ---
 
-## 1. Create a new Supabase project
+## ⚠️ Vercel — requires switching the runtime
 
-1. Go to https://supabase.com → New project. Pick a region close to your users.
-2. Save the **Project URL** and the **anon public key** (Settings → API). You will need them later.
-3. Also copy the **service_role key** — only used locally for the migration script. **Never** put it in the website code.
+To deploy on Vercel you must convert the project from the Cloudflare Workers
+runtime to Vercel's Node runtime. Steps:
 
-## 2. Create the database schema
+1. Remove `@cloudflare/vite-plugin` and `wrangler.jsonc`.
+2. Install the TanStack Start Node/Vercel adapter (`@tanstack/react-start` ships
+   with one — see https://tanstack.com/start/latest/docs/framework/react/hosting).
+3. Update `vite.config.ts` to use `target: "vercel"`.
+4. Re-deploy.
 
-1. In your new Supabase project: **SQL Editor → New query**.
-2. Open `SETUP.sql` from this repo, paste the whole file, and click **Run**.
-3. **Important**: edit line `IF NEW.email = 'afraimfarag7@gmail.com'` to your own email before running, or change it later.
+This is a non-trivial migration. **Use Cloudflare Pages instead** unless you
+have a hard requirement to be on Vercel.
 
-## 3. Migrate your existing data + images (optional but recommended)
+The `vercel.json` in the repo is configured for the static-fallback case but
+will only return a working site if you switch the runtime first.
 
-This copies the profile, skills, certificates, projects, and uploaded images from the old Lovable Cloud backend into your new Supabase project.
+---
+
+## ⚠️ Netlify — also requires the Netlify adapter
+
+Same situation as Vercel. Netlify will deploy the static assets in
+`.output/public/`, but server routes (`/api/*`, server functions, SSR pages)
+will 404 unless you install the TanStack Start Netlify adapter and reconfigure
+`vite.config.ts`.
+
+---
+
+## Setting up your own Supabase backend
+
+(Same as before — these steps apply regardless of which host you pick.)
+
+### 1. Create a new Supabase project
+
+1. https://supabase.com → New project. Save the **Project URL**, **anon key**,
+   and **service_role key**.
+2. **Service_role key is server-only** — never put it in frontend env or commit it.
+
+### 2. Create the database schema
+
+1. SQL Editor → New query.
+2. Paste `SETUP.sql` from this repo and run it.
+3. Edit the line `IF NEW.email = 'afraimfarag7@gmail.com'` to your own email
+   first (or update it later).
+
+### 3. Migrate data + images (optional)
 
 ```bash
-# 1. Clone the repo locally
 git clone <your-github-repo-url>
 cd <repo>
 bun install
 
-# 2. Export from OLD backend (Lovable Cloud)
+# Export from old backend
 SUPABASE_URL="https://yvcelpnsiactitawkrse.supabase.co" \
 SUPABASE_SERVICE_ROLE_KEY="<old-service-role-key>" \
 node scripts/export-data.mjs
-# -> creates ./export/ with JSON + image files
 
-# 3. Import into your NEW Supabase project
+# Import into new project
 SUPABASE_URL="https://<new-ref>.supabase.co" \
 SUPABASE_SERVICE_ROLE_KEY="<new-service-role-key>" \
 OLD_SUPABASE_URL="https://yvcelpnsiactitawkrse.supabase.co" \
 node scripts/import-data.mjs
 ```
 
-Where to find the **old service role key**: in Lovable, open Cloud → Backend → Settings → API. (You can request it from Lovable support if not visible.)
+### 4. Configure auth
 
-The script:
-- Re-uploads every file in the `portfolio` storage bucket.
-- Rewrites `image_url` columns to point at the new Supabase URL.
-- Skips `user_roles` — roles are tied to auth users, which differ in the new project. Just sign up with your admin email; the trigger grants you admin automatically.
+Supabase → **Authentication → URL Configuration**:
+- **Site URL**: your production URL
+- **Redirect URLs**: add `http://localhost:5173` and your production URL
 
-## 4. Configure auth
+### 5. Environment variables
 
-In your new Supabase project → **Authentication → URL Configuration**:
-- **Site URL**: `https://your-domain.com` (or the Vercel/Netlify URL)
-- **Redirect URLs**: add `http://localhost:5173` and your production URL.
+Set these on your host (Cloudflare Pages / Vercel / Netlify):
 
-If you want Google sign-in: **Authentication → Providers → Google** → enable and add your OAuth credentials.
-
-## 5. Update the project's environment variables
-
-This project currently reads Supabase credentials from `.env`. **Delete or replace** `.env` with these values from your NEW Supabase project:
-
-```env
-VITE_SUPABASE_URL="https://<new-ref>.supabase.co"
-VITE_SUPABASE_PUBLISHABLE_KEY="<new-anon-key>"
-VITE_SUPABASE_PROJECT_ID="<new-ref>"
-SUPABASE_URL="https://<new-ref>.supabase.co"
-SUPABASE_PUBLISHABLE_KEY="<new-anon-key>"
+```
+VITE_SUPABASE_URL=https://<new-ref>.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=<new-anon-key>
+VITE_SUPABASE_PROJECT_ID=<new-ref>
+SUPABASE_URL=https://<new-ref>.supabase.co
+SUPABASE_PUBLISHABLE_KEY=<new-anon-key>
 ```
 
-> The anon key is safe to ship in the frontend. The service_role key must NEVER be put in `.env` of a deployed site.
+### 6. Claim admin
 
-## 6. Deploy to Vercel
-
-1. Push your repo to GitHub (Lovable already does this for you).
-2. Go to https://vercel.com → **Add New → Project** → import your GitHub repo.
-3. **Framework Preset**: `Other`.
-4. **Build Command**: `bun run build`  (or `npm run build`)
-5. **Output Directory**: leave default — TanStack Start handles it.
-6. Add environment variables (Settings → Environment Variables):
-   - `VITE_SUPABASE_URL`
-   - `VITE_SUPABASE_PUBLISHABLE_KEY`
-   - `VITE_SUPABASE_PROJECT_ID`
-   - `SUPABASE_URL`
-   - `SUPABASE_PUBLISHABLE_KEY`
-7. Click **Deploy**.
-
-> **Note about the runtime**: this project is currently configured for the Cloudflare Workers runtime via `@cloudflare/vite-plugin` and `wrangler.jsonc`. Vercel deploys it fine as a static + serverless build, but if you hit runtime errors specific to the Workers adapter, the simplest fix is to deploy to **Cloudflare Pages** instead (it natively supports the existing config) — see step 7.
-
-## 7. Alternative: Deploy to Cloudflare Pages (zero-config)
-
-Because the project already targets Cloudflare Workers, this is the smoothest path:
-
-1. https://dash.cloudflare.com → **Workers & Pages → Create → Pages → Connect to Git**.
-2. Pick your repo. Build command: `bun run build`. Output: `.output/public`.
-3. Add the same env variables as in step 6.
-4. Deploy.
-
-## 8. Alternative: Deploy to Netlify
-
-1. https://app.netlify.com → **Add new site → Import from Git**.
-2. Netlify auto-reads `netlify.toml` already in this repo.
-3. Add the env variables (Site settings → Environment variables).
-4. Deploy.
-
-## 9. After deploying — claim admin
-
-1. Open your live site, click the small lock icon in the footer → log in.
-2. Sign up with the email you set in `SETUP.sql` (`handle_new_user` function).
-3. You're now admin and can edit the profile, skills, certificates, and projects.
+After deploy, open the site → footer lock icon → sign up with the admin email
+you set in `SETUP.sql`. The `handle_new_user` trigger grants admin automatically.
 
 ---
 
 ## Troubleshooting
 
-- **Images don't appear**: open one in a new tab. If the URL still points to `yvcelpnsiactitawkrse.supabase.co`, re-run the import script with `OLD_SUPABASE_URL` set so URLs get rewritten.
-- **Login works but "Add" buttons don't appear**: the `handle_new_user` trigger only grants admin if the email matches. Edit it in SQL Editor or insert manually:
+- **404 on Vercel / "missing index.html"**: expected — see the warning at the
+  top. Use Cloudflare Pages or migrate to the Vercel adapter.
+- **Images don't appear after migration**: re-run `import-data.mjs` with
+  `OLD_SUPABASE_URL` set so URLs get rewritten.
+- **Login works but Add/Edit/Delete buttons don't appear**: admin role wasn't
+  granted. Run in SQL Editor:
   ```sql
   INSERT INTO public.user_roles (user_id, role)
   SELECT id, 'admin' FROM auth.users WHERE email = 'you@example.com';
   ```
-- **CORS / auth redirect errors**: check Site URL and Redirect URLs in Supabase Authentication settings.
+- **Auth redirect errors**: check Site URL + Redirect URLs in Supabase.
+
+---
+
+## About pushing to GitHub
+
+Lovable already syncs every change in this editor to your connected GitHub
+repo automatically. There's no separate push step — once the files above are
+updated here, your repo has them. Just trigger a redeploy on your host.
