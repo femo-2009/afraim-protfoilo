@@ -2,6 +2,7 @@
   command = "bun run build"
   publish = ".output/public"
 
+# SPA fallback — only needed if not using the Netlify SSR adapter
 [[redirects]]
   from = "/*"
   to = "/index.html"
