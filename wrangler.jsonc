@@ -1,7 +1,13 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "tanstack-start-app",
+  "name": "afraim-porfolio",
   "compatibility_date": "2025-09-24",
   "compatibility_flags": ["nodejs_compat"],
   "main": "@tanstack/react-start/server-entry",
+  "vars": {
+    "APPWRITE_ENDPOINT": "https://cloud.appwrite.io/v1",
+    "APPWRITE_PROJECT_ID": "6a4ee19200075ddb2e2e",
+    "VITE_APPWRITE_ENDPOINT": "https://cloud.appwrite.io/v1",
+    "VITE_APPWRITE_PROJECT_ID": "6a4ee19200075ddb2e2e"
+  }
 }
