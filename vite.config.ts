@@ -13,6 +13,7 @@ export default defineConfig({
     tsconfigPaths(),
     cloudflare({
       configPath: "./wrangler.jsonc",
+      viteEnvironment: { name: "worker" },
     }),
   ],
 });
