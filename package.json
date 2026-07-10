@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build && cp dist/worker/index.js dist/worker/_worker.js && node -e \"const w=JSON.parse(require('fs').readFileSync('wrangler.jsonc','utf8')),c=JSON.parse(require('fs').readFileSync('dist/worker/wrangler.json','utf8'));if(w.vars)c.vars=w.vars;require('fs').writeFileSync('dist/worker/wrangler.json',JSON.stringify(c))\"",
+    "build": "vite build && cp dist/worker/index.js dist/worker/_worker.js && node -e \"const w=JSON.parse(require('fs').readFileSync('wrangler.jsonc','utf8')),c=JSON.parse(require('fs').readFileSync('dist/worker/wrangler.json','utf8'));if(w.vars)c.vars=w.vars;require('fs').writeFileSync('dist/worker/wrangler.json',JSON.stringify(c));const s=require('fs').readdirSync('dist/server/assets').find(f=>f.startsWith('_tanstack-start-manifest')),t=require('fs').readdirSync('dist/worker/assets').find(f=>f.startsWith('_tanstack-start-manifest'));if(s&&t){require('fs').copyFileSync('dist/server/assets/'+s,'dist/worker/assets/'+t);console.log('Manifest fixed: copied SSR manifest to Worker')}\"",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",
