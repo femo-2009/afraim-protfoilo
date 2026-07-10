@@ -1,11 +1,7 @@
 import { Client, Account, Databases, Storage } from "appwrite";
 
 const APPWRITE_ENDPOINT = import.meta.env.VITE_APPWRITE_ENDPOINT || process.env.APPWRITE_ENDPOINT || "https://cloud.appwrite.io/v1";
-const APPWRITE_PROJECT_ID = import.meta.env.VITE_APPWRITE_PROJECT_ID || process.env.APPWRITE_PROJECT_ID;
-
-if (!APPWRITE_PROJECT_ID) {
-  throw new Error("Missing APPWRITE_PROJECT_ID env var");
-}
+const APPWRITE_PROJECT_ID = import.meta.env.VITE_APPWRITE_PROJECT_ID || process.env.APPWRITE_PROJECT_ID || "6a4ee19200075ddb2e2e";
 
 const client = new Client()
   .setEndpoint(APPWRITE_ENDPOINT)
