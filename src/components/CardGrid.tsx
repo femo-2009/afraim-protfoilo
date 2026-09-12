@@ -94,22 +94,22 @@ export function CardGrid({ items, collectionId, isAdmin, onEdit }: Props) {
         <DialogContent className={cn("max-w-2xl", collectionId === "projects" && "max-h-[85vh] flex flex-col overflow-hidden p-0")}>
           {selected && (
             <div className={cn("flex flex-col gap-4 overflow-y-auto p-6", collectionId === "projects" && "min-h-0 flex-1")}>
-              <DialogHeader>
+              <DialogHeader className={cn(collectionId === "projects" && "shrink-0")}>
                 <DialogTitle className="font-mono text-2xl">
                   <span className="text-primary">&gt;</span> {selected.title}
                 </DialogTitle>
                 <DialogDescription className="sr-only">{selected.title} details</DialogDescription>
               </DialogHeader>
               {selected.image_url && (
-                <div className="rounded-md overflow-hidden border border-border">
-                  <img src={selected.image_url} alt={selected.title} className="w-full max-h-[400px] object-contain bg-muted" />
+                <div className={cn("rounded-md overflow-hidden border border-border bg-muted", collectionId === "projects" && "shrink-0")}>
+                  <img src={selected.image_url} alt={selected.title} className="w-full max-h-[400px] object-contain" />
                 </div>
               )}
               {selected.description && (
                 <p className="text-foreground/90 whitespace-pre-wrap leading-relaxed">{selected.description}</p>
               )}
               {(selected.website_url || selected.code_url) && (
-                <DialogFooter className="flex flex-col sm:flex-row gap-2 sticky bottom-0 bg-background pt-2">
+                <DialogFooter className={cn("flex flex-col sm:flex-row gap-2 sticky bottom-0 bg-background pt-2", collectionId === "projects" && "shrink-0")}>
                   {selected.website_url && (
                     <a href={selected.website_url} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
                       <Button className="w-full font-mono">
