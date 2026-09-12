@@ -49,7 +49,7 @@ function HomePage() {
       try {
         unsub = appwriteClient.subscribe(
           `databases.${DATABASE_ID}.collections.profile.documents`,
-          () => load()
+          () => load(),
         );
       } catch {}
     }
@@ -181,6 +181,7 @@ function Marquee({ items, empty }: { items: { $id: string; title: string; image_
 }
 
 function ProfileEditor({ open, onOpenChange, profile }: { open: boolean; onOpenChange: (o: boolean) => void; profile: ProfileDocument | null }) {
+  const { user, isAdmin } = useAuth();
   const [name, setName] = useState(profile?.name ?? "");
   const [bio, setBio] = useState(profile?.bio ?? "");
   const [photoUrl, setPhotoUrl] = useState<string | null>(profile?.photo_url ?? null);
@@ -196,6 +197,11 @@ function ProfileEditor({ open, onOpenChange, profile }: { open: boolean; onOpenC
   }, [open, profile]);
 
   async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
+    if (!isAdmin || !user) {
+      toast.error("Only the administrator can upload a profile photo");
+      return;
+    }
+
     const file = e.target.files?.[0];
     if (!file) return;
     setUploading(true);
@@ -204,26 +210,30 @@ function ProfileEditor({ open, onOpenChange, profile }: { open: boolean; onOpenC
       setPhotoUrl(url);
       toast.success("Photo uploaded");
     } catch (err: any) {
-      toast.error(err.message);
+      toast.error(err.message || "Upload failed");
     } finally {
       setUploading(false);
     }
   }
 
   async function handleSave() {
+    if (!isAdmin || !user) {
+      toast.error("Only the administrator can save profile changes");
+      return;
+    }
+
     setSaving(true);
     try {
       const data = { name: name.trim(), bio: bio.trim(), photo_url: photoUrl };
+      const permissions = [
+        Permission.read(Role.any()),
+        Permission.write(Role.user(user.$id)),
+      ];
+
       if (profile) {
-        await databases.updateDocument(DATABASE_ID, "profile", profile.$id, data, [
-          Permission.read(Role.any()),
-          Permission.write(Role.any()),
-        ]);
+        await databases.updateDocument(DATABASE_ID, "profile", profile.$id, data, permissions);
       } else {
-        await databases.createDocument(DATABASE_ID, "profile", ID.unique(), data, [
-          Permission.read(Role.any()),
-          Permission.write(Role.any()),
-        ]);
+        await databases.createDocument(DATABASE_ID, "profile", ID.unique(), data, permissions);
       }
       toast.success("Profile saved");
       onOpenChange(false);
