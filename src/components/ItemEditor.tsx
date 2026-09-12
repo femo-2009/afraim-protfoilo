@@ -9,6 +9,7 @@ import { uploadImage } from "@/lib/upload";
 import { toast } from "sonner";
 import { ID, Permission, Role } from "appwrite";
 import type { Item } from "./CardGrid";
+import { useAuth } from "@/hooks/use-auth";
 
 interface Props {
   open: boolean;
@@ -19,6 +20,7 @@ interface Props {
 }
 
 export function ItemEditor({ open, onOpenChange, collectionId, item, showLinks }: Props) {
+  const { user, isAdmin } = useAuth();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -55,35 +57,56 @@ export function ItemEditor({ open, onOpenChange, collectionId, item, showLinks }
   }
 
   async function handleSave() {
+    if (!isAdmin || !user) {
+      toast.error("Only the administrator can save changes");
+      return;
+    }
+
     if (!title.trim()) {
       toast.error("Title required");
       return;
     }
+
     setSaving(true);
     const payload: Record<string, any> = {
       title: title.trim(),
       description: description.trim(),
       image_url: imageUrl,
     };
+
     if (collectionId === "skills" && category) {
       payload.category = category;
     }
+
     if (showLinks) {
       payload.website_url = websiteUrl.trim() || null;
       payload.code_url = codeUrl.trim() || null;
     }
+
     try {
+      const permissions = [
+        Permission.read(Role.any()),
+        Permission.write(Role.user(user.$id)),
+      ];
+
       if (item) {
-        await databases.updateDocument(DATABASE_ID, collectionId, item.$id, payload, [
-          Permission.read(Role.any()),
-          Permission.write(Role.any()),
-        ]);
+        await databases.updateDocument(
+          DATABASE_ID,
+          collectionId,
+          item.$id,
+          payload,
+          permissions,
+        );
       } else {
-        await databases.createDocument(DATABASE_ID, collectionId, ID.unique(), payload, [
-          Permission.read(Role.any()),
-          Permission.write(Role.any()),
-        ]);
+        await databases.createDocument(
+          DATABASE_ID,
+          collectionId,
+          ID.unique(),
+          payload,
+          permissions,
+        );
       }
+
       toast.success(item ? "Updated" : "Created");
       onOpenChange(false);
     } catch (err: any) {
@@ -118,7 +141,7 @@ export function ItemEditor({ open, onOpenChange, collectionId, item, showLinks }
               >
                 <option value="">All</option>
                 <option value="language">Language</option>
-                <option value="framework">Framework & Library</option>
+                <option value="framework">Framework &amp; Library</option>
                 <option value="tool">Tool</option>
               </select>
             </div>
