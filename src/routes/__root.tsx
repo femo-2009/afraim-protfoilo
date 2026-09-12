@@ -35,13 +35,13 @@ export const Route = createRootRoute({
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Afraim Farag — Developer Portfolio" },
-      { name: "description", content: "Portfolio of Afraim Farag — developer projects, skills, and certifications." },
+      { name: "description", content: "Portfolio of Afraim Farag — junior web developer building responsive business websites and web applications." },
       { name: "author", content: "Afraim Farag" },
       { property: "og:type", content: "website" },
       { property: "og:title", content: "Afraim Farag — Developer Portfolio" },
       { name: "twitter:title", content: "Afraim Farag — Developer Portfolio" },
-      { property: "og:description", content: "Portfolio of Afraim Farag — developer projects, skills, and certifications." },
-      { name: "twitter:description", content: "Portfolio of Afraim Farag — developer projects, skills, and certifications." },
+      { property: "og:description", content: "Portfolio of Afraim Farag — junior web developer building responsive business websites and web applications." },
+      { name: "twitter:description", content: "Portfolio of Afraim Farag — junior web developer building responsive business websites and web applications." },
       { property: "og:image", content: "" },
       { name: "twitter:image", content: "" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -65,6 +65,20 @@ function RootShell({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
+        <noscript>
+          <div style={{ maxWidth: "720px", margin: "40px auto", padding: "24px", fontFamily: "Arial, sans-serif", lineHeight: 1.6 }}>
+            <h1>Afraim Farag — Web Developer</h1>
+            <p>
+              I build responsive business websites and web applications using React, TypeScript, Next.js, Tailwind CSS, Laravel, PHP, SQL, and Firebase.
+            </p>
+            <p>
+              Please enable JavaScript to view the complete interactive portfolio, projects, skills, and certificates.
+            </p>
+            <p>
+              <a href="/projects">View projects</a> · <a href="/skills">View skills</a> · <a href="https://wa.me/201031043820">Contact me on WhatsApp</a>
+            </p>
+          </div>
+        </noscript>
         {children}
         <Scripts />
       </body>
