@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Pencil, Trash2, ExternalLink, Code as CodeIcon } from "lucide-react";
 import { databases, DATABASE_ID } from "@/integrations/appwrite/client";
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/use-auth";
 
 export type Item = {
   $id: string;
@@ -23,10 +24,17 @@ interface Props {
 }
 
 export function CardGrid({ items, collectionId, isAdmin, onEdit }: Props) {
+  const { user, isAdmin: authenticatedIsAdmin } = useAuth();
   const [selected, setSelected] = useState<Item | null>(null);
 
   async function handleDelete(id: string) {
+    if (!authenticatedIsAdmin || !user) {
+      toast.error("Only the administrator can delete items");
+      return;
+    }
+
     if (!confirm("Delete this item?")) return;
+
     try {
       await databases.deleteDocument(DATABASE_ID, collectionId, id);
       toast.success("Deleted");
@@ -66,7 +74,7 @@ export function CardGrid({ items, collectionId, isAdmin, onEdit }: Props) {
               {item.description && (
                 <p className="mt-1.5 md:mt-2 text-xs md:text-sm text-muted-foreground line-clamp-2">{item.description}</p>
               )}
-              {isAdmin && (
+              {isAdmin && authenticatedIsAdmin && (
                 <div className="mt-3 md:mt-4 flex gap-2" onClick={(e) => e.stopPropagation()}>
                   <Button size="sm" variant="outline" onClick={() => onEdit(item)} className="text-xs">
                     <Pencil className="h-3 w-3 mr-1" /> Edit
