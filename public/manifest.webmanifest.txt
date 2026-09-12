@@ -1,0 +1,17 @@
+{
+  "name": "Afraim Farag — Developer Portfolio",
+  "short_name": "Afraim Portfolio",
+  "description": "Portfolio of Afraim Farag, a junior web developer.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f1110",
+  "theme_color": "#12c2c9",
+  "icons": [
+    {
+      "src": "/profile-photo.png",
+      "sizes": "605x611",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
