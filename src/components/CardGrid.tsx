@@ -5,6 +5,7 @@ import { Pencil, Trash2, ExternalLink, Code as CodeIcon } from "lucide-react";
 import { databases, DATABASE_ID } from "@/integrations/appwrite/client";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
+import { cn } from "@/lib/utils";
 
 export type Item = {
   $id: string;
@@ -90,9 +91,9 @@ export function CardGrid({ items, collectionId, isAdmin, onEdit }: Props) {
       </div>
 
       <Dialog open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className={cn("max-w-2xl", collectionId === "projects" && "max-h-[85vh] flex flex-col overflow-hidden p-0")}>
           {selected && (
-            <>
+            <div className={cn("flex flex-col gap-4 overflow-y-auto p-6", collectionId === "projects" && "min-h-0 flex-1")}>
               <DialogHeader>
                 <DialogTitle className="font-mono text-2xl">
                   <span className="text-primary">&gt;</span> {selected.title}
@@ -108,7 +109,7 @@ export function CardGrid({ items, collectionId, isAdmin, onEdit }: Props) {
                 <p className="text-foreground/90 whitespace-pre-wrap leading-relaxed">{selected.description}</p>
               )}
               {(selected.website_url || selected.code_url) && (
-                <DialogFooter className="flex flex-col sm:flex-row gap-2">
+                <DialogFooter className="flex flex-col sm:flex-row gap-2 sticky bottom-0 bg-background pt-2">
                   {selected.website_url && (
                     <a href={selected.website_url} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
                       <Button className="w-full font-mono">
@@ -125,7 +126,7 @@ export function CardGrid({ items, collectionId, isAdmin, onEdit }: Props) {
                   )}
                 </DialogFooter>
               )}
-            </>
+            </div>
           )}
         </DialogContent>
       </Dialog>
